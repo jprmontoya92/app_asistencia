@@ -147,15 +147,27 @@ Widget _crearAppbar(String mes){
   
   return Column(
     children: <Widget>[
-ListTile(
-      title: Text('${eventos.tipoMarcaje} - Ssas Primer Piso '),
-      subtitle: Text('${eventos.fecha}'),
-    ),
-    Divider()
+      Card(
+        child: ListTile(
+          leading: _iconMarca(eventos.tipoMarcaje),
+          title:Text('${eventos.establecimiento} ${eventos.ubicacion} '),
+          subtitle: Text('${eventos.fecha}'),
+        ),
+      )
     ]
   );
      
   }
+
+  Widget _iconMarca(String marca){
+      
+      if(marca == 'Entrada'){
+        return Icon(Icons.arrow_upward,color: Colors.green);
+      }else{
+        return Icon(Icons.arrow_downward,color: Colors.red);
+      }
+  }
+
 
   Future<Null> refrescarLista(){
 

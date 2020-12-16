@@ -5,11 +5,15 @@ EventoModel eventoModelFromJson(String str) => EventoModel.fromJson(json.decode(
 String eventoModelToJson(EventoModel data) => json.encode(data.toJson());
 
 class EventoModel {
+    String establecimiento;
+    String ubicacion;
     String tipoMarcaje;
     String fecha;
     String mes;
 
     EventoModel({
+        this.establecimiento,
+        this.ubicacion,
         this.tipoMarcaje,
         this.fecha,
         this.mes
@@ -17,9 +21,11 @@ class EventoModel {
 
     factory EventoModel.fromJson(Map<String, dynamic> json) => EventoModel(
         
-        tipoMarcaje : json["even_tipo"],
-        fecha       : json["even_fecha"],
-        mes         : json["even_mes"]
+        establecimiento : json["establishment"],
+        ubicacion       : json["location"],
+        tipoMarcaje     : json["type"],
+        fecha           : json["date"],
+        mes             : json["month"]
     );
 
     Map<String, dynamic> toJson() => {

@@ -5,11 +5,11 @@ import 'package:http/http.dart' as http;
 
 class UsuarioProvider{
 
-  final _url ='http://1856cef55538.ngrok.io/api/auth/login';
+  final _url ='http://fd529b4ecd5b.ngrok.io/api/auth/login';
 
   Future <Map<String, dynamic>> login (String rut, String password) async{
 
-    final _body = {"usu_rut":rut, "password":password};
+    final _body = {"rut":rut, "password":password};
 
     final response = await http.post(_url, body: _body);
 
@@ -22,7 +22,7 @@ class UsuarioProvider{
       
     } else{
       
-      return {'error': false, 'token': decodedResp['access_token'], 'usuRut': decodedResp['usu_rut']};
+      return {'error': false, 'token': decodedResp['access_token'], 'usuRut': decodedResp['rut']};
 
     }
 

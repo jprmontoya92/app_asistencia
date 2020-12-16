@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 
 class MarcajeProvider{
 
-  final String _url = 'http://1856cef55538.ngrok.io/api/auth/eventos/';
+  final String _url = 'http://fd529b4ecd5b.ngrok.io/api/auth/events';
   final String marcaje = 'marcaje';
 
   final prefs = new PreferenciasUsuario(); 
@@ -54,7 +54,7 @@ class MarcajeProvider{
 
     final _headers = {"x-Requested-With":"XMLHttpRequest", "Authorization": "Bearer "+prefs.token};
     // construyo el cuerpo para ser enviado por post
-    final _body ={"even_tipo":tipoMarca, "even_lat":coord.latitude.toString(),"even_lng":coord.longitude.toString(), "even_usu_rut":prefs.usuRut.toString(), "even_ident_id":identificador.toString()};
+    final _body ={"type":tipoMarca, "lat":coord.latitude.toString(),"lng":coord.longitude.toString(), "rut":prefs.usuRut.toString(), "identifier_id":identificador.toString()};
 
         try{
 
@@ -62,7 +62,7 @@ class MarcajeProvider{
           
           if(result.isNotEmpty && result[0].rawAddress.isNotEmpty){
             // conectado
-              final response = await http.post(_url+'crear', headers: _headers, body: _body);
+              final response = await http.post(_url+'/create', headers: _headers, body: _body);
 
               Map<String, dynamic> decodeResp = json.decode(response.body);
               print(decodeResp);
@@ -84,18 +84,18 @@ class MarcajeProvider{
 
   Future<List<EventoModel>> cargarEventos() async{
 
-    final _body = {"even_usu_rut":prefs.usuRut};
+    final _body = {"rut":prefs.usuRut};
     final _headers = {"x-Requested-With":"XMLHttpRequest", "Authorization": "Bearer "+prefs.token};
 
         final List<EventoModel> eventos = new List();
 
-        final resp = await http.post(_url+'consulta', headers: _headers, body: _body);
+        final resp = await http.post(_url, headers: _headers, body: _body);
         
         final decodeData = json.decode(resp.body);
 
         if(decodeData == null) return [];
 
-        decodeData['eventos'].forEach((event){
+        decodeData['events'].forEach((event){
 
           final prodTemp = EventoModel.fromJson(event);
 
