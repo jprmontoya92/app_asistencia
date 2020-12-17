@@ -3,6 +3,7 @@ import 'package:asistencia/src/bloc/provider.dart';
 import 'package:asistencia/src/page/home_page.dart';
 import 'package:asistencia/src/page/login_page.dart';
 import 'package:asistencia/src/page/prueba.dart';
+import 'package:asistencia/src/page/registro_page.dart';
 import 'package:asistencia/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:flutter/material.dart';
 
@@ -37,9 +38,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: LoginPage.routeName,
       routes: {
-        LoginPage.routeName   :  (BuildContext context)  => LoginPage(),
-        HomePage.routeName    :  (BuildContext context)  => HomePage(),
-        PruebaPage.routeName  :  (BuildContext context)  => PruebaPage(),
+        LoginPage.routeName    :  (BuildContext context)  => LoginPage(),
+        RegistroPage.routeName :  (BuildContext context)  => RegistroPage(),
+        HomePage.routeName     :  (BuildContext context)  => HomePage(),
+        PruebaPage.routeName   :  (BuildContext context)  => PruebaPage(),
               },
               theme: ThemeData(
                 primaryColor: Colors.purple

@@ -1,24 +1,27 @@
 import 'dart:async';
 
+import 'package:asistencia/src/utils/rut_helper.dart';
+
 class Validators{
-
-
+      
 
   // siempre es conveniente indicar que informacion fluye o que infromacion entra en Strema Transformer
-  final validarEmail= StreamTransformer<String , String>.fromHandlers(
+  final validarRut = StreamTransformer<String , String>.fromHandlers(
 
-    handleData: (email, sink){ //el sink dira que infromacion sigue fluyendo o que infromacion necsito notificar 
+      
+    handleData: (rut, sink){ //el sink dira que infromacion sigue fluyendo o que infromacion necsito notificar 
 
-    // Expresion que valida un correo electronico 
+       if(rut != ''){
+          if(RutHelper.check(rut)){
+        sink.add(rut);
+        }else{
+          sink.addError("Rut Incorrecto");
+        }
 
-    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regExp   = new RegExp(pattern); // con esta expresion regular verifico si hace march 
-
-      if(regExp.hasMatch(email)){
-        sink.add(email);
-      }else{
-        sink.addError("Email no correcto");
-      }
+       }else{
+          sink.addError("Rut Incorrecto");
+       }
+      
     }
   ); 
 

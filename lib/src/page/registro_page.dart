@@ -7,15 +7,10 @@ import 'package:asistencia/src/utils/const.dart';
 import 'package:asistencia/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
+class RegistroPage extends StatelessWidget {
   
-static  String routeName = 'login';
+static  String routeName = 'registro';
 
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
 
   final usuarioProvider =  new UsuarioProvider();
 
@@ -28,7 +23,6 @@ class _LoginPageState extends State<LoginPage> {
         children: <Widget>[
           crearFondo(context),
           _loginForm(context),// cuando se trabja con cajas de texto, es recomendable ponerlos dentro de un scroll para que no se opaquen o oculten con el teclado 
-          
         ],
       ),
     );
@@ -121,17 +115,22 @@ Widget _loginForm(BuildContext context){
           ),
           child: Column(
             children: <Widget>[
-              Text("Ingreso", style: TextStyle(fontSize: 20.0),),
-              SizedBox(height: 60.0,),
+              Text("Registro", style: TextStyle(fontSize: 20.0),),
               _crearInputRut(bloc),
-              SizedBox(height: 30.0 ,),
+              SizedBox(height: 10.0 ,),
+              _crearInputNombres('Nombre'),
+              SizedBox(height: 10.0,),
+              _crearInputNombres('Apellido Paterno'),
+              SizedBox(height: 10.0,),
+              _crearInputNombres('Apellido Materno'),
+              SizedBox(height: 10.0,),
               _crearInputPassword(bloc),
-              SizedBox(height: 30.0,),
+              SizedBox(height: 10.0,),
               _crearBoton(bloc),
               FlatButton(
-                child: Text('Crear un anueva cuenta'),
-               onPressed: ()=> Navigator.pushReplacementNamed(context, 'registro'),
-             ),
+               child: Text('Ya tienes una cuenta? Login'),
+               onPressed: ()=> Navigator.pushReplacementNamed(context, 'login'),
+              ),
             ],
           ),
         )
@@ -151,10 +150,10 @@ Widget _crearInputRut(LoginBloc bloc){
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextField(
-          keyboardType: TextInputType.multiline,
+          keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            icon: Icon(Icons.supervised_user_circle,color: Colors.deepPurple,),
-            hintText: '12345678-0',
+           // icon: Icon(Icons.supervised_user_circle,color: Colors.deepPurple,),
+            hintText: '1234567890',
             labelText: 'Rut',
             counterText: snapshot.data,
             errorText: snapshot.error
@@ -177,7 +176,7 @@ Widget _crearInputPassword(LoginBloc bloc){
         child: TextField(
           obscureText: true,
           decoration: InputDecoration(
-            icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
+            //icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
             labelText: 'Contraseña',
             counterText: snapshot.data,
             errorText: snapshot.error
@@ -188,6 +187,18 @@ Widget _crearInputPassword(LoginBloc bloc){
     }
   );
 }
+
+Widget _crearInputNombres(String labelText){
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 20.0),
+    child: TextField(
+      obscureText: true,
+      decoration: InputDecoration(
+        labelText: labelText,
+      )
+    ),
+  );
+} 
 
 
 Widget _crearBoton(LoginBloc bloc){
@@ -231,6 +242,7 @@ Widget _crearBoton(LoginBloc bloc){
         }
    }
 
+}
+
   
  
-}

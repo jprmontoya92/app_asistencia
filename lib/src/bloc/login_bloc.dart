@@ -13,7 +13,7 @@ class LoginBloc with Validators{
 
   // recuperar los datos del Stream
 
-  Stream<String> get rutStream => _rutController.stream;
+  Stream<String> get rutStream => _rutController.stream.transform(validarRut);
   Stream<String> get passwordStream => _passwordController.stream.transform(validarPassword);
 
   //necesito combinar los stream 
