@@ -1,6 +1,7 @@
 
 import 'package:asistencia/src/bloc/login_bloc.dart';
 import 'package:asistencia/src/bloc/provider.dart';
+import 'package:asistencia/src/bloc/registro_bloc.dart';
 import 'package:asistencia/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:asistencia/src/providers/usuario_provider.dart';
 import 'package:asistencia/src/utils/const.dart';
@@ -80,7 +81,7 @@ static  String routeName = 'registro';
   }
 
 Widget _loginForm(BuildContext context){
-  final bloc = Provider.of(context);
+  final blocReg = Provider.ofreg(context);
   final size = MediaQuery.of(context).size;
 
 // va a permitir hacer scroll dependiendo el largo del hijo (child)
@@ -116,17 +117,19 @@ Widget _loginForm(BuildContext context){
           child: Column(
             children: <Widget>[
               Text("Registro", style: TextStyle(fontSize: 20.0),),
-              _crearInputRut(bloc),
+              _crearInputRut(blocReg),
               SizedBox(height: 10.0 ,),
-              _crearInputNombres('Nombre'),
+              _crearInputNombre(blocReg,'Nombre'),
               SizedBox(height: 10.0,),
-              _crearInputNombres('Apellido Paterno'),
+              _crearInputApellidoP(blocReg,'Apellido Paterno'),
               SizedBox(height: 10.0,),
-              _crearInputNombres('Apellido Materno'),
+              _crearInputApellidoM(blocReg,'Apellido Materno'),
               SizedBox(height: 10.0,),
-              _crearInputPassword(bloc),
+              _crearInputEmail(blocReg),
               SizedBox(height: 10.0,),
-              _crearBoton(bloc),
+              _crearInputPassword(blocReg),
+              SizedBox(height: 30.0,),
+              _crearBoton(blocReg),
               FlatButton(
                child: Text('Ya tienes una cuenta? Login'),
                onPressed: ()=> Navigator.pushReplacementNamed(context, 'login'),
@@ -142,7 +145,7 @@ Widget _loginForm(BuildContext context){
 
 }
 
-Widget _crearInputRut(LoginBloc bloc){
+Widget _crearInputRut(RegistroBloc bloc){
 
   return StreamBuilder(
     stream: bloc.rutStream,
@@ -150,7 +153,7 @@ Widget _crearInputRut(LoginBloc bloc){
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextField(
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.multiline,
           decoration: InputDecoration(
            // icon: Icon(Icons.supervised_user_circle,color: Colors.deepPurple,),
             hintText: '1234567890',
@@ -166,7 +169,7 @@ Widget _crearInputRut(LoginBloc bloc){
   
 }
 
-Widget _crearInputPassword(LoginBloc bloc){
+Widget _crearInputPassword(RegistroBloc bloc){
 
   return StreamBuilder(
     stream: bloc.passwordStream,
@@ -188,20 +191,95 @@ Widget _crearInputPassword(LoginBloc bloc){
   );
 }
 
-Widget _crearInputNombres(String labelText){
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 20.0),
-    child: TextField(
-      obscureText: true,
-      decoration: InputDecoration(
-        labelText: labelText,
-      )
-    ),
+Widget _crearInputNombre(RegistroBloc bloc, String labelText){
+
+  return StreamBuilder(
+    stream: bloc.nombreStream,
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: TextField(
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            //icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
+            labelText: labelText,
+            counterText: snapshot.data,
+            errorText: snapshot.error
+          ),
+          onChanged: bloc.changedNombre,
+        ),
+      );
+    }
   );
-} 
+}
+Widget _crearInputApellidoP(RegistroBloc bloc, String labelText){
+
+  return StreamBuilder(
+    stream: bloc.apellidopStream,
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: TextField(
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            //icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
+            labelText: labelText,
+            counterText: snapshot.data,
+            errorText: snapshot.error
+          ),
+          onChanged: bloc.changedApellidop,
+        ),
+      );
+    }
+  );
+}
+
+Widget _crearInputApellidoM(RegistroBloc bloc, String labelText){
+
+  return StreamBuilder(
+    stream: bloc.apellidomStream,
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: TextField(
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            //icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
+            labelText: labelText,
+            counterText: snapshot.data,
+            errorText: snapshot.error
+          ),
+          onChanged: bloc.changedApellidom,
+        ),
+      );
+    }
+  );
+}
+
+Widget _crearInputEmail(RegistroBloc bloc){
+
+  return StreamBuilder(
+    stream: bloc.emailStream,
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: TextField(
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(
+            //icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
+            labelText: 'Correo Electronico',
+            counterText: snapshot.data,
+            errorText: snapshot.error
+          ),
+          onChanged: bloc.changedEmail,
+        ),
+      );
+    }
+  );
+}
 
 
-Widget _crearBoton(LoginBloc bloc){
+Widget _crearBoton(RegistroBloc bloc){
 
   return StreamBuilder(
     stream: bloc.formValidStram,
@@ -219,25 +297,24 @@ Widget _crearBoton(LoginBloc bloc){
         elevation: 0.0,
         color: Colors.deepPurple,
         textColor: Colors.white,
-        onPressed:snapshot.hasData ? ()=> _login(bloc,context): null
+        onPressed:snapshot.hasData ? ()=> _registro(bloc,context): null
       );
     }
   );
  }
 
- _login(LoginBloc bloc , BuildContext context) async{
+ _registro(RegistroBloc bloc , BuildContext context) async{
 
    
-      Map info = await usuarioProvider.login(bloc.rut, bloc.password);
+      Map info = await usuarioProvider.registro(bloc.rut,"",bloc.nombre,bloc.email,bloc.password);
 
         if(info['error']){
           
           mostrarAlerta(context, info['message'],'Informacion Incorrecta',Consts.incorrecto);
       
         }else{
-          prefs.token = info['token'].toString();
-          prefs.usuRut = info['usuRut'].toString();
-          Navigator.pushReplacementNamed(context, 'home');
+          mostrarAlerta(context, info['message'],'Registro',Consts.correcto);
+          Navigator.pushReplacementNamed(context, 'login');
           
         }
    }

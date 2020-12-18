@@ -19,7 +19,7 @@ class LoginBloc with Validators{
   //necesito combinar los stream 
 
   Stream<bool> get formValidStram =>
-  Observable.combineLatest2(rutStream, passwordStream, (e,p)=> true); // paso los dos stream ya pasados por el tranform y luego pregunto por la funcion si vienen con data
+  Observable.combineLatest2(rutStream, passwordStream, (e,p) => true); // paso los dos stream ya pasados por el tranform y luego pregunto por la funcion si vienen con data
 
   //insertar valores al stream 
 
