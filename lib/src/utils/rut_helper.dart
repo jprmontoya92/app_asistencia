@@ -69,10 +69,11 @@ class RutHelper {
       var dvEsperado = 11 - (suma % 11);
 
       // Casos Especiales (0 y K)
-      dv = (dv == 'K') ? '10' : dv;
-      dv = (dv == 0) ? '11' : dv;
+      dv = (dv.toUpperCase() == 'K') ? '10' : dv;
+      dv = (dv == '0') ? '11' : dv;
       // Validar que el Cuerpo coincide con su Dígito Verificador
       if (dvEsperado.toString() != dv.toString()) {
+        
         return false;
       }
 

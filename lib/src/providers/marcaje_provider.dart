@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 
 class MarcajeProvider{
 
-  final String _url = 'http://fd529b4ecd5b.ngrok.io/api/auth/events';
+  final String _url = 'http://54a298ca5973.ngrok.io/api/auth/events';
   final String marcaje = 'marcaje';
 
   final prefs = new PreferenciasUsuario(); 

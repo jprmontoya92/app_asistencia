@@ -6,6 +6,7 @@ import 'package:asistencia/src/providers/usuario_provider.dart';
 import 'package:asistencia/src/utils/const.dart';
 import 'package:asistencia/src/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   
@@ -23,6 +24,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    //Default
+
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -77,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
               Icon(Icons.person_pin_circle, color: Colors.white, size: 100.0,),
               //el double infinity me ocpara todo el ancho y por defecto lo centrara
               SizedBox(height: 10.0, width: double.infinity),
-              Text("Servicio de Salud Araucania Sur", style: TextStyle(color: Colors.white, fontSize:25.0 ),)
+              Text("Servicio de Salud Araucania Sur", style: TextStyle(color: Colors.white, fontSize:20.0 ),)
             ],
           ),
         )
@@ -129,7 +133,7 @@ Widget _loginForm(BuildContext context){
               SizedBox(height: 30.0,),
               _crearBoton(bloc),
               FlatButton(
-                child: Text('Crear un anueva cuenta'),
+                child: Text('Crear una nueva cuenta', style: TextStyle(color:Colors.purple)),
                onPressed: ()=> Navigator.pushReplacementNamed(context, 'registro'),
              ),
             ],
@@ -191,7 +195,6 @@ Widget _crearInputPassword(LoginBloc bloc){
 
 
 Widget _crearBoton(LoginBloc bloc){
-
   return StreamBuilder(
     stream: bloc.formValidStram,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -216,19 +219,22 @@ Widget _crearBoton(LoginBloc bloc){
 
  _login(LoginBloc bloc , BuildContext context) async{
 
+        progressIndicator(context, 'Verificando....').show();
    
-      Map info = await usuarioProvider.login(bloc.rut, bloc.password);
+       Map info = await usuarioProvider.login(bloc.rut, bloc.password);
 
         if(info['error']){
-          
-          mostrarAlerta(context, info['message'],'Informacion Incorrecta',Consts.incorrecto);
+           progressIndicator(context, '').hide();
+          mostrarAlerta(context, info['mensaje'],'Informacion Incorrecta',Consts.incorrecto);
       
         }else{
+          progressIndicator(context, '').hide();
           prefs.token = info['token'].toString();
           prefs.usuRut = info['usuRut'].toString();
           Navigator.pushReplacementNamed(context, 'home');
           
-        }
+        } 
+
    }
 
   

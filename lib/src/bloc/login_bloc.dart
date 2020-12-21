@@ -24,7 +24,7 @@ class LoginBloc with Validators{
   //insertar valores al stream 
 
   Function (String) get changedRut => _rutController.sink.add;
-  Function (String) get changedPassword => _passwordController.add;
+  Function (String) get changedPassword => _passwordController.sink.add;
 
   //obtener ultimo valor ingresado en los stream 
 

@@ -125,13 +125,17 @@ Widget _loginForm(BuildContext context){
               SizedBox(height: 10.0,),
               _crearInputApellidoM(blocReg,'Apellido Materno'),
               SizedBox(height: 10.0,),
-              _crearInputEmail(blocReg),
+              _crearInputEmail1(blocReg),
+              SizedBox(height: 10.0,),
+               _crearInputEmail2(blocReg),
+               SizedBox(height: 10.0,),
+               _crearInputFono(blocReg),
               SizedBox(height: 10.0,),
               _crearInputPassword(blocReg),
               SizedBox(height: 30.0,),
               _crearBoton(blocReg),
               FlatButton(
-               child: Text('Ya tienes una cuenta? Login'),
+               child: Text('Ya tienes una cuenta? Login', style: TextStyle(color:Colors.purple),),
                onPressed: ()=> Navigator.pushReplacementNamed(context, 'login'),
               ),
             ],
@@ -156,9 +160,9 @@ Widget _crearInputRut(RegistroBloc bloc){
           keyboardType: TextInputType.multiline,
           decoration: InputDecoration(
            // icon: Icon(Icons.supervised_user_circle,color: Colors.deepPurple,),
-            hintText: '1234567890',
+            hintText: '123456789-0',
             labelText: 'Rut',
-            counterText: snapshot.data,
+           // counterText: snapshot.data,
             errorText: snapshot.error
           ),
           onChanged: bloc.changedRut,
@@ -203,7 +207,7 @@ Widget _crearInputNombre(RegistroBloc bloc, String labelText){
           decoration: InputDecoration(
             //icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
             labelText: labelText,
-            counterText: snapshot.data,
+            //counterText: snapshot.data,
             errorText: snapshot.error
           ),
           onChanged: bloc.changedNombre,
@@ -224,7 +228,7 @@ Widget _crearInputApellidoP(RegistroBloc bloc, String labelText){
           decoration: InputDecoration(
             //icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
             labelText: labelText,
-            counterText: snapshot.data,
+            //counterText: snapshot.data,
             errorText: snapshot.error
           ),
           onChanged: bloc.changedApellidop,
@@ -246,7 +250,7 @@ Widget _crearInputApellidoM(RegistroBloc bloc, String labelText){
           decoration: InputDecoration(
             //icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
             labelText: labelText,
-            counterText: snapshot.data,
+            //counterText: snapshot.data,
             errorText: snapshot.error
           ),
           onChanged: bloc.changedApellidom,
@@ -256,10 +260,10 @@ Widget _crearInputApellidoM(RegistroBloc bloc, String labelText){
   );
 }
 
-Widget _crearInputEmail(RegistroBloc bloc){
+Widget _crearInputEmail1(RegistroBloc bloc){
 
   return StreamBuilder(
-    stream: bloc.emailStream,
+    stream: bloc.email1Stream,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -267,17 +271,61 @@ Widget _crearInputEmail(RegistroBloc bloc){
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             //icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
-            labelText: 'Correo Electronico',
-            counterText: snapshot.data,
+            labelText: 'Correo Institucional',
+            //counterText: snapshot.data,
             errorText: snapshot.error
           ),
-          onChanged: bloc.changedEmail,
+          onChanged: bloc.changedEmail1,
         ),
       );
     }
   );
 }
 
+Widget _crearInputEmail2(RegistroBloc bloc){
+
+  return StreamBuilder(
+    stream: bloc.email2Stream,
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: TextField(
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(
+            //icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
+            labelText: 'Correo Personal',
+            //counterText: snapshot.data,
+            errorText: snapshot.error
+          ),
+          onChanged: bloc.changedEmail2,
+        ),
+      );
+    }
+  );
+}
+
+Widget _crearInputFono(RegistroBloc bloc){
+
+  return StreamBuilder(
+    stream: bloc.fonoStream,
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: TextField(
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            //icon: Icon(Icons.supervised_user_circle, color: Colors.deepPurple,),
+            labelText: 'Fono Contacto',
+            hintText: '912131415',
+            //counterText: snapshot.data,
+            errorText: snapshot.error
+          ),
+          onChanged: bloc.changedFono,
+        ),
+      );
+    }
+  );
+}
 
 Widget _crearBoton(RegistroBloc bloc){
 
@@ -305,16 +353,31 @@ Widget _crearBoton(RegistroBloc bloc){
 
  _registro(RegistroBloc bloc , BuildContext context) async{
 
-   
-      Map info = await usuarioProvider.registro(bloc.rut,"",bloc.nombre,bloc.email,bloc.password);
+       progressIndicator(context, 'Registrando usuario....').show();
+
+      Map info = await usuarioProvider.registro(bloc.rut,bloc.nombre,bloc.apellidoP, bloc.aprellidoM,bloc.email1,bloc.email2, bloc.password, bloc.fono);
 
         if(info['error']){
-          
-          mostrarAlerta(context, info['message'],'Informacion Incorrecta',Consts.incorrecto);
+          progressIndicator(context, '').hide();
+          mostrarAlerta(context, info['mensaje'],'Informacion Incorrecta',Consts.incorrecto);
       
         }else{
-          mostrarAlerta(context, info['message'],'Registro',Consts.correcto);
-          Navigator.pushReplacementNamed(context, 'login');
+            //mostrarAlerta(context, info['message'],'Registro',Consts.correcto);
+
+            Map info2 = await usuarioProvider.login(bloc.rut, bloc.password);
+
+            if(info2['error']){
+              
+              progressIndicator(context, '').hide();
+              mostrarAlerta(context, info2['mensaje'],'Informacion Incorrecta',Consts.incorrecto);
+          
+            }else{
+              progressIndicator(context, '').hide();
+              prefs.token = info2['token'].toString();
+              prefs.usuRut = info2['usuRut'].toString();
+              Navigator.pushReplacementNamed(context, 'home');
+            }
+
           
         }
    }

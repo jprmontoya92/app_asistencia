@@ -30,6 +30,7 @@ dependencies:
   barcode_scan: ^2.0.1
   device_info: ^1.0.0
   imei_plugin: ^1.2.0
+  progress_dialog: ^1.2.0
   
 
 dev_dependencies:
